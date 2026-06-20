@@ -43,10 +43,10 @@ interface PriceAlert {
 // ─── Airline Config ──────────────────────────────────────────────────────────
 
 const AIRLINE_CFG: Record<string, { color: string; bg: string; text: string }> = {
-  THY: { color: "#E31837", bg: "#FEF2F2", text: "#B91C1C" },
-  PC:  { color: "#F7931E", bg: "#FFF7ED", text: "#C2410C" },
-  XQ:  { color: "#7C3AED", bg: "#F5F3FF", text: "#6D28D9" },
-  TK2: { color: "#0891B2", bg: "#ECFEFF", text: "#0E7490" },
+  THY: { color: "#C0392B", bg: "#FDF2F2", text: "#9B2335" },
+  PC:  { color: "#E67E22", bg: "#FEF9F0", text: "#B35A0A" },
+  XQ:  { color: "#7B5EA7", bg: "#F3F0F9", text: "#5E3D8F" },
+  TK2: { color: "#2980B9", bg: "#EEF6FB", text: "#1A6FA8" },
 };
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -368,7 +368,7 @@ function SplashScreen() {
             className="text-4xl font-extrabold text-gray-900 tracking-tight leading-none"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
-            UçuşFırsat
+            Nimbus
           </h1>
           <p className="text-sm font-semibold tracking-[0.3em] text-emerald-500 mt-1.5 uppercase">
             FlightDeal
@@ -410,7 +410,7 @@ function Header({
             className="font-extrabold text-gray-900 text-[15px] block"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
-            UçuşFırsat
+            Nimbus
           </span>
           <span className="text-emerald-500 font-semibold text-[10px] tracking-wide">FlightDeal</span>
         </div>
@@ -460,12 +460,26 @@ function HomeScreen({ onFlightClick }: { onFlightClick: (f: Flight) => void }) {
   return (
     <>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 px-4 pt-7 pb-14 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
-          <div className="absolute top-6 right-6 w-36 h-36 rounded-full border border-white" />
-          <div className="absolute top-12 right-12 w-20 h-20 rounded-full border border-white" />
-          <div className="absolute -bottom-10 left-6 w-48 h-48 rounded-full border border-white" />
-          <div className="absolute bottom-4 left-24 w-16 h-16 rounded-full border border-white" />
+      <section className="px-4 pt-7 pb-14 relative overflow-hidden" style={{background: "url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&auto=format&fit=crop') center/cover no-repeat"}}>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-50">
+      <svg viewBox="0 0 800 300" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+  <g fill="#e8f4ff" opacity="0.35">
+    {/* Sol üst bulut */}
+    <ellipse cx="100" cy="60" rx="110" ry="38" />
+    <ellipse cx="55" cy="72" rx="70" ry="40" />
+    <ellipse cx="155" cy="70" rx="65" ry="36" />
+    <ellipse cx="100" cy="45" rx="55" ry="30" />
+    {/* Sağ üst bulut */}
+    <ellipse cx="680" cy="50" rx="110" ry="36" />
+    <ellipse cx="630" cy="62" rx="70" ry="38" />
+    <ellipse cx="730" cy="60" rx="65" ry="34" />
+    <ellipse cx="680" cy="38" rx="52" ry="28" />
+    {/* Orta sağ küçük bulut */}
+    <ellipse cx="500" cy="180" rx="75" ry="26" />
+    <ellipse cx="460" cy="170" rx="48" ry="28" />
+    <ellipse cx="540" cy="172" rx="45" ry="24" />
+  </g>
+</svg>
         </div>
         <div className="relative max-w-2xl mx-auto">
           <p className="text-emerald-400 text-[11px] font-bold uppercase tracking-[0.2em] mb-2">
@@ -884,7 +898,7 @@ function ProfileScreen({ alertCount }: { alertCount: number }) {
             <Icon className={`w-4 h-4 ${color} mx-auto mb-1.5`} />
             <p
               className="text-xl font-extrabold text-gray-900 leading-none"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               {value}
             </p>
@@ -1009,7 +1023,7 @@ export default function App() {
   const activeAlertCount = alerts.filter((a) => a.active).length;
 
   return (
-    <div className="min-h-screen bg-[#f2f4f7]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#F8F9FC]" style={{ fontFamily: "'Inter', sans-serif" }}>
       <Header
         lang={lang}
         onLangToggle={() => setLang((l) => (l === "TR" ? "EN" : "TR"))}

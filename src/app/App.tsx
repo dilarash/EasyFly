@@ -4,7 +4,7 @@ import {
   Calendar, X, TrendingDown, CheckCircle2, Zap, Heart,
   MapPin, ChevronRight, Star,
 } from "lucide-react";
-
+import { searchFlights } from "../api";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Screen = "home" | "search" | "alerts" | "profile";
@@ -438,12 +438,43 @@ function Header({
 
 function HomeScreen({ onFlightClick }: { onFlightClick: (f: Flight) => void }) {
   const [activeAirline, setActiveAirline] = useState("all");
-  const [maxPrice, setMaxPrice] = useState(3000);
+  const [maxPrice, setMaxPrice] = useState(100000);
   const [departure, setDeparture] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
+  const [flights, setFlights] = useState(FLIGHTS);
+  const [loading, setLoading] = useState(false);
+  
+  const handleSearch = async () => {
+    if (!departure || !destination || !date) return;
+    setLoading(true);
+    try {
+      const results = await searchFlights(departure, destination, date);
+      console.log("API sonucu:", results);
+      const mapped = results.map((r: any, i: number) => ({
+        id: i + 1,
+        from: r.legs[0].from,
+        fromCity: departure,
+        to: r.legs[0].to,
+        toCity: destination,
+        flag: "🌍",
+        airline: r.carriers[0] || "Bilinmiyor",
+        airlineName: r.carriers[0] || "Bilinmiyor",
+        airlineCode: "all",
+        date: new Date(r.legs[0].dep).toLocaleDateString("tr-TR"),
+        duration: `${Math.floor(r.legs[0].dur_min / 60)}sa ${r.legs[0].dur_min % 60}dk`,
+        stops: r.legs[0].stops === 0 ? "Direkt" : `${r.legs[0].stops} aktarma`,
+        price: Math.round(r.price_raw),
+        imageId: "photo-1506905925346-21bda4d32df4",
+      }));
+      setFlights(mapped);
+    } catch (e) {
+      console.error(e);
+    }
+    setLoading(false);
+  };
 
-  const filtered = FLIGHTS.filter((f) => {
+  const filtered = flights.filter((f) => {
     const airlineOk = activeAirline === "all" || f.airlineCode === activeAirline;
     const priceOk = f.price <= maxPrice;
     return airlineOk && priceOk;
@@ -528,10 +559,13 @@ function HomeScreen({ onFlightClick }: { onFlightClick: (f: Flight) => void }) {
                 className="w-full bg-gray-50 border border-gray-100 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 outline-none focus:border-emerald-400 focus:bg-white transition-colors"
               />
             </div>
-            <button className="w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm shadow-md shadow-emerald-200">
-              <Search className="w-4 h-4" />
-              Uçuş Ara
-            </button>
+            <button 
+      onClick={handleSearch}
+      disabled={loading}
+      className="w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm shadow-md shadow-emerald-200 disabled:opacity-60">
+      <Search className="w-4 h-4" />
+      {loading ? "Aranıyor..." : "Uçuş Ara"}
+</button>
           </div>
         </div>
       </section>
@@ -562,8 +596,8 @@ function HomeScreen({ onFlightClick }: { onFlightClick: (f: Flight) => void }) {
               <input
                 type="range"
                 min={500}
-                max={3000}
-                step={100}
+                max={100000}
+                step={1000}
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
                 className="w-20 accent-emerald-500 cursor-pointer"
